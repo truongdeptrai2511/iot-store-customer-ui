@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import ProductDetails from "./components/ProductDetails";
 import Cart from "./pages/Cart";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<Notfound />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
 
