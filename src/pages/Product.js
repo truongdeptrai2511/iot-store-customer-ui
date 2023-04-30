@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import SingleProduct from "../components/SingleProduct";
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [filterProducts, setFilterProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState(null);
 
@@ -21,22 +20,18 @@ const Products = () => {
     "graphics card",
   ];
 
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
+
   useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch("https://itproducts.onrender.com/products");
-        if (!res.ok) throw new Error("Oops! An error has occured");
-        const json = await res.json();
-        setIsLoading(false);
-        setProducts(json);
-        setFilterProducts(json);
-      } catch (err) {
-        setIsLoading(false);
-        setErr(err.message);
-      }
-    };
-    getData();
+    try {
+      setIsLoading(true);
+      setIsLoading(false);
+      dispatch({ type: 'GET_PRODUCTS' });
+    } catch (err) {
+      setIsLoading(false);
+      setErr(err.message);
+    }
   }, []);
 
   if (isLoading)
@@ -63,7 +58,6 @@ const Products = () => {
           <h3
             className="select-none cursor-pointer flex justify-between"
             onClick={() => {
-              setFilterProducts(products);
               setCatPath("all categories");
             }}
           >
@@ -79,7 +73,6 @@ const Products = () => {
                 const filters = products.filter(
                   (product) => product.category === cat
                 );
-                setFilterProducts(filters);
                 setCatPath(categories[i]);
               }}
             >
@@ -93,10 +86,14 @@ const Products = () => {
             <span className="text-sky-400 px-1">{catPath}</span>
           </p>
           <div className="grid grid-cols-3 gap-10 ">
-            {filterProducts &&
-              filterProducts.map((product) => (
-                <SingleProduct key={product.id} product={product} />
-              ))}
+            {products &&
+              products
+                .map((product) => {
+                  return <SingleProduct
+                    key={product.Id}
+                    product={product}
+                  />;
+                })}
           </div>
         </div>
       </div>
