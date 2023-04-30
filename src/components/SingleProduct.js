@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-const SingleProduct = ({product}) => {
+const SingleProduct = ({ product }) => {
   if (!product) {
     return null; // or return a placeholder UI if you prefer
   }
