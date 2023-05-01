@@ -16,8 +16,18 @@ const Products = () => {
   const [searchValue, setSearchValue] = useState("");
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(8);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
 
   const para = useRef(null);
+
+  useEffect(() => {
+    if (endIndex >= currentProducts.length) {
+      setHasMoreProducts(false);
+    } else {
+      setHasMoreProducts(true);
+    }
+  }, [startIndex, endIndex, currentProducts]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,14 +168,17 @@ const Products = () => {
           </Suspense>
         ))}
       </div>
-      {currentProducts.length > endIndex && (
-        <button
-          className="mx-auto block mt-8 py-2 px-6 bg-gray-200 text-gray-700 font-medium rounded-md"
-          onClick={handleLoadMore}
-        >
-          Load more
-        </button>
-      )}
+      <div className="mx-auto text-center">
+        {hasMoreProducts && (
+          <button onClick={handleLoadMore} className="mx-auto my-4 py-2 px-4 bg-gray-500 hover:bg-gray-800 text-white font-bold rounded">
+            Load more
+          </button>
+        )}
+        {!hasMoreProducts && (
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="mx-auto my-4 py-2 px-4 bg-gray-500 hover:bg-gray-700 text-gray-500 font-bold rounded" style={{ backgroundColor: 'transparent' }}>            <p className="mx-auto">Scroll to top</p>
+          </button>
+        )}
+      </div>
     </div>
   );
 };
