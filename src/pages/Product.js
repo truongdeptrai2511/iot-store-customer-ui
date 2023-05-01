@@ -1,28 +1,49 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
-import SingleProduct from "../components/SingleProduct";
+
+const SingleProduct = lazy(() => import("../components/SingleProduct"));
 
 const Products = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [err, setErr] = useState(null);
-  const [catPath, setCatPath] = useState("All categories");
   const dispatch = useDispatch();
   const category = useSelector(state => state.category.category);
   const products = useSelector(state => state.product.products);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [err, setErr] = useState(null);
+  const [catPath, setCatPath] = useState("All categories");
+  const [currentProducts, setCurrentProducts] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(8);
+
   const para = useRef(null);
-  const [currentProducts, setCurrentProducts] = useState(products);
 
   useEffect(() => {
-    try {
-      dispatch({ type: 'GET_CATEGORY' });
-      dispatch({ type: 'GET_PRODUCTS' });
-      setIsLoading(false);
-    } catch (err) {
-      setErr(err.message);
-      setIsLoading(false);
-    }
+    const fetchData = async () => {
+      try {
+        dispatch({ type: 'GET_CATEGORY' });
+        dispatch({ type: 'GET_PRODUCTS' });
+        setIsLoading(false);
+      } catch (err) {
+        setErr(err.message);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    setCurrentProducts(products);
+  }, [products]);
+
+  useEffect(() => {
+    setCurrentProducts(
+      products.filter(product =>
+        product.ProductName.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    );
+  }, [searchValue]);
 
   const handleCategoryClick = (cat) => {
     if (cat.CategoryName === "All categories") {
@@ -33,10 +54,20 @@ const Products = () => {
       setCatPath(cat.CategoryName);
       setCurrentProducts(filters);
     }
-  }
+    setStartIndex(0);
+    setEndIndex(9);
+  };
+
   const resetCategoryFilter = () => {
     setCurrentProducts(products);
     setCatPath("All categories");
+    setStartIndex(0);
+    setEndIndex(9);
+  };
+
+  const handleLoadMore = () => {
+    setStartIndex(startIndex + 0);
+    setEndIndex(endIndex + 8);
   };
 
   if (isLoading) {
@@ -52,7 +83,7 @@ const Products = () => {
       <p className="h-screen flex flex-col justify-center items-center text-2xl">
         <span>{err}</span>
         <Link to="/product" className="text-lg text-gray-500 font-semibold">
-          &larr;Refresh page
+          ←Refresh page
         </Link>
       </p>
     );
@@ -60,38 +91,81 @@ const Products = () => {
 
   return (
     <div className="container mx-auto pb-20">
-      <h2 className="text-center text-3xl py-10">All Products</h2>
-      <div className="flex justify-between gap-10">
-        <div className="w-[20%] bg-gray-50 flex flex-col gap-3 px-3 pt-2">
-          <h3
-            className="select-none cursor-pointer flex justify-between"
-            onClick={resetCategoryFilter}
-          >
-            <span className="font-semibold" >All Categories</span>
-            <span>{`(${category.length})`}</span>
-          </h3>
-          {category.map(cat => (
-            <p
-              className="select-none cursor-pointer capitalize font-semibold"
-              key={cat.Id}
-              onClick={() => handleCategoryClick(cat)}
+      <input
+        type="text"
+        placeholder="Search product"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        style={{
+          width: '17%',
+          height: '35px',
+          borderRadius: '5px',
+          border: '0.5px solid #ccc',
+          padding: '15px',
+          marginBottom: '-20px',
+          marginTop: '20px',
+          fontSize: '16px',
+          outline: 'none',
+        }}
+      />
+      <h1 className="text-4xl font-bold mt-8 mb-4">Products</h1>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <p className="font-bold text-gray-600">{catPath}</p>
+          {catPath !== "All categories" && (
+            <button
+              className="ml-4 text-gray-500"
+              onClick={() => resetCategoryFilter()}
             >
-              <span>{cat.CategoryName}</span>
-            </p>
-          ))}
+              (clear filter)
+            </button>
+          )}
         </div>
-        <div>
-          <p className="text-gray-500 pb-4">
-            <Link to="/">Home </Link>/
-            <span className="text-sky-400 px-1">{catPath}</span>
-          </p>
-          <div className="grid grid-cols-3 gap-10 ">
-            {currentProducts.map(product => (
-              <SingleProduct key={product.Id} product={product} />
-            ))}
+        <div className="flex items-center">
+          <p className="mr-4 text-gray-600">{currentProducts.length} products</p>
+          <div className="relative">
+            <select
+              className="bg-gray-100 rounded-md py-2 px-4 font-medium text-gray-700"
+              onChange={(e) => handleCategoryClick(JSON.parse(e.target.value))}
+            >
+              {category.map((cat) => (
+                <option key={cat.Id} value={JSON.stringify(cat)}>
+                  {cat.CategoryName}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-2 top-0 h-full w-8 flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-gray-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M15.293 7.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 1 0 1.414-1.414L12.414 11H18a1 1 0 1 0 0-2h-5.586l2.293-2.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {currentProducts.slice(startIndex, endIndex).map((product) => (
+          <Suspense key={product.Id} fallback={<p>Loading...</p>}>
+            <SingleProduct product={product} />
+          </Suspense>
+        ))}
+      </div>
+      {currentProducts.length > endIndex && (
+        <button
+          className="mx-auto block mt-8 py-2 px-6 bg-gray-200 text-gray-700 font-medium rounded-md"
+          onClick={handleLoadMore}
+        >
+          Load more
+        </button>
+      )}
     </div>
   );
 };
