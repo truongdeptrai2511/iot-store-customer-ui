@@ -28,7 +28,6 @@ const Products = () => {
     }
   }, [startIndex, endIndex, currentProducts]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -168,7 +167,7 @@ const Products = () => {
           </Suspense>
         ))}
       </div>
-      <div className="mx-auto text-center">
+      <div className="mx-auto text-center py-10">
         {hasMoreProducts && (
           <button onClick={handleLoadMore} className="mx-auto my-4 py-2 px-4 bg-gray-500 hover:bg-gray-800 text-white font-bold rounded">
             Load more

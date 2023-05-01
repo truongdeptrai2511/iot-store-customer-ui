@@ -10,10 +10,56 @@ function* fetchCategory() {
     yield put({ type: 'CATEGORY_FAILED', payload: error });
   }
 }
-function* actionWatcher() {
+
+function* fetchOrder(action) {
+  try {
+    console.log(action.payload);
+    const response = yield axios.post('https://localhost:7199/api/order', action.payload, {
+      headers: {
+        'Authorization': localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      }
+    }
+    );
+    console.log(response.data);
+    yield put({ type: 'ORDER_RECEIVED', payload: response.data.Result });
+    alert(response.data.Message);
+  } catch (error) {
+    yield put({ type: 'ORDER_FAILED', payload: error });
+    console.log(error); // log the error message for troubleshooting
+  }
+}
+
+function* fetchGetOrder() {
+  try {
+    const response = yield axios.get('https://localhost:7199/api/order', {
+      headers: {
+        'Authorization': localStorage.getItem('token')
+      }
+    });
+    console.log(response.data);
+    yield put({ type: 'GET_ORDER_RECEIVED', payload: response.data.Result });
+    alert(response.data.Message);
+  } catch (error) {
+    yield put({ type: 'GET_ORDER_FAILED', payload: error });
+    console.log(error); // log the error message for troubleshooting
+  }
+}
+
+// -----------------------------------------------------------------------------
+function* categoryWatcher() {
   yield takeLatest('GET_CATEGORY', fetchCategory);
 }
 
-export default function* cateSaga() {
-  yield all([actionWatcher()]);
+function* orderWatcher() {
+  yield takeLatest('GET_ORDER', fetchOrder);
 }
+
+function* getOrderWatcher() {
+  yield takeLatest('GET_ORDER_LIST', fetchGetOrder);
+}
+
+export default function* rootSaga() {
+  yield all([categoryWatcher(), orderWatcher(), getOrderWatcher()]);
+}
+
