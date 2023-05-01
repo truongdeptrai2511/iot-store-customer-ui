@@ -2,9 +2,10 @@
 const initialState = {
     category: [],
     error: null,
+    filterProducts: [],
   };
   
-  const reducer = (state = initialState, action) => {
+  const categoryReducer = (state = initialState, action) => {
     switch (action.type) {
       case 'CATEGORY_RECEIVED':
         return { ...state, category: action.payload, error: null };
@@ -15,5 +16,5 @@ const initialState = {
     }
   };
   
-  export default reducer;
+  export default categoryReducer;
   

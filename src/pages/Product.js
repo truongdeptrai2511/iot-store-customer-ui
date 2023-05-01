@@ -1,46 +1,53 @@
 import { useState, useEffect, useRef } from "react";
-import SingleProduct from "../components/SingleProduct";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import SingleProduct from "../components/SingleProduct";
 
 const Products = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [err, setErr] = useState(null);
-
-  const [catPath, setCatPath] = useState("all categories");
-
-  const para = useRef(null);
-
-  const categories = [
-    "smartphone",
-    "laptop",
-    "smartwatch",
-    "earbuds",
-    "Keyboard",
-    "graphics card",
-  ];
-
+  const [catPath, setCatPath] = useState("All categories");
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.product.products);
+  const category = useSelector(state => state.category.category);
+  const products = useSelector(state => state.product.products);
+  const para = useRef(null);
+  const [currentProducts, setCurrentProducts] = useState(products);
 
   useEffect(() => {
     try {
-      setIsLoading(true);
-      setIsLoading(false);
+      dispatch({ type: 'GET_CATEGORY' });
       dispatch({ type: 'GET_PRODUCTS' });
-    } catch (err) {
       setIsLoading(false);
+    } catch (err) {
       setErr(err.message);
+      setIsLoading(false);
     }
   }, []);
 
-  if (isLoading)
+  const handleCategoryClick = (cat) => {
+    if (cat.CategoryName === "All categories") {
+      setCatPath("All categories");
+      setCurrentProducts(products);
+    } else {
+      const filters = products.filter(product => product.CategoryId === cat.Id);
+      setCatPath(cat.CategoryName);
+      setCurrentProducts(filters);
+    }
+  }
+  const resetCategoryFilter = () => {
+    setCurrentProducts(products);
+    setCatPath("All categories");
+  };
+
+  if (isLoading) {
     return (
       <p className="h-screen flex flex-col justify-center items-center text-2xl">
         Loading...
       </p>
     );
-  if (err)
+  }
+
+  if (err) {
     return (
       <p className="h-screen flex flex-col justify-center items-center text-2xl">
         <span>{err}</span>
@@ -49,6 +56,7 @@ const Products = () => {
         </Link>
       </p>
     );
+  }
 
   return (
     <div className="container mx-auto pb-20">
@@ -57,43 +65,30 @@ const Products = () => {
         <div className="w-[20%] bg-gray-50 flex flex-col gap-3 px-3 pt-2">
           <h3
             className="select-none cursor-pointer flex justify-between"
-            onClick={() => {
-              setCatPath("all categories");
-            }}
+            onClick={resetCategoryFilter}
           >
-            <span className="font-semibold">All Categories</span>
-            <span>{`(${products.length})`}</span>
+            <span className="font-semibold" >All Categories</span>
+            <span>{`(${category.length})`}</span>
           </h3>
-          {categories.map((cat, i) => (
+          {category.map(cat => (
             <p
-              ref={para}
               className="select-none cursor-pointer capitalize font-semibold"
-              key={i}
-              onClick={() => {
-                const filters = products.filter(
-                  (product) => product.category === cat
-                );
-                setCatPath(categories[i]);
-              }}
+              key={cat.Id}
+              onClick={() => handleCategoryClick(cat)}
             >
-              <span>{cat}</span>
+              <span>{cat.CategoryName}</span>
             </p>
           ))}
         </div>
         <div>
           <p className="text-gray-500 pb-4">
-            {<Link to="/">Home </Link>}/
+            <Link to="/">Home </Link>/
             <span className="text-sky-400 px-1">{catPath}</span>
           </p>
           <div className="grid grid-cols-3 gap-10 ">
-            {products &&
-              products
-                .map((product) => {
-                  return <SingleProduct
-                    key={product.Id}
-                    product={product}
-                  />;
-                })}
+            {currentProducts.map(product => (
+              <SingleProduct key={product.Id} product={product} />
+            ))}
           </div>
         </div>
       </div>
