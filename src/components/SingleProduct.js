@@ -8,14 +8,16 @@ const SingleProduct = ({ product }) => {
   const handleOrderClick = () => {
     const order = {
       productId: product.Id,
+      productName: product.ProductName,
       count: 1, 
-      price: product.Price,
+      price: product.Price
     };
     const currentOrders = JSON.parse(localStorage.getItem('orders')) || []; // Lấy danh sách đơn hàng hiện tại từ local storage, hoặc trả về một mảng rỗng nếu không có dữ liệu nào trong local storage
     const updatedOrders = [...currentOrders, order]; // Thêm đơn hàng mới vào danh sách hiện tại
     localStorage.setItem('orders', JSON.stringify(updatedOrders)); // Lưu danh sách đơn hàng mới vào local storage
     dispatch({ type: 'GET_ORDER', payload: updatedOrders }); // Cập nhật state với danh sách đơn hàng mới
     console.log(updatedOrders);
+    localStorage.setItem(product.Id, product.ProductName);
   }
   
   return (
