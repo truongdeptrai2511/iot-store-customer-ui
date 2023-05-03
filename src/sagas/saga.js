@@ -62,4 +62,3 @@ function* getOrderWatcher() {
 export default function* rootSaga() {
   yield all([categoryWatcher(), orderWatcher(), getOrderWatcher()]);
 }
-

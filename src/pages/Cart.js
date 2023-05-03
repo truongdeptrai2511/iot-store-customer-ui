@@ -6,10 +6,15 @@ import Order from "../components/Order";
 const Cart = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.getOrder.getOrder);
-
+  console.log(orders)
   useEffect(() => {
     dispatch({ type: 'GET_ORDER_LIST' });
   }, []);
+  // Sort the list of orders by timestamp and get the most recent order
+  const mostRecentOrder = orders?.reduce((a, b) => {
+    return new Date(a?.UpdatedAt) > new Date(b?.UpdatedAt) ? a : b;
+  }, null);
+  console.log(mostRecentOrder)
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
@@ -17,10 +22,10 @@ const Cart = () => {
         Your Orders
       </h1>
       <div className="flex flex-wrap justify-center gap-10 max-w-4xl">
-        {orders?.map(order => (
-          <Order key={order.Id} order={order}>
+        {mostRecentOrder && (
+          <Order key={mostRecentOrder.Id} order={mostRecentOrder}>
           </Order>
-        ))}
+        )}
       </div>
       <Link
         to="/product"
