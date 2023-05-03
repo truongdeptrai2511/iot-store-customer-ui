@@ -16,9 +16,10 @@ const Cart = () => {
       <h1 className="text-3xl font-bold text-gray-800">
         Your Orders
       </h1>
-      <div className="flex flex-row gap-10 w-full max-w-md">
+      <div className="flex flex-wrap justify-center gap-10 max-w-4xl">
         {orders?.map(order => (
-          <Order key={order.Id} order={order} />
+          <Order key={order.Id} order={order}>
+          </Order>
         ))}
       </div>
       <Link
@@ -32,4 +33,3 @@ const Cart = () => {
 };
 
 export default Cart;
-  

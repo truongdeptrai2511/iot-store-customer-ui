@@ -19,8 +19,8 @@ const SingleProduct = ({ product }) => {
     console.log(updatedOrders);
     localStorage.setItem(product.Id, product.ProductName);
   }
-  
   return (
+    
     <div className="single-product flex flex-col bg-gray-50 gap-3 shadow-md hover:shadow-xl hover:scale-105 duration-300 px-4 py-7 rounded-sm overflow-hidden">
       <div className="flex justify-center">
         <img

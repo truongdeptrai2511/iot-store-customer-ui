@@ -20,6 +20,10 @@ const Products = () => {
 
   const para = useRef(null);
 
+  products.forEach((product) => {
+    localStorage.setItem(product.Id, product.ProductName);
+  });
+
   useEffect(() => {
     if (endIndex >= currentProducts.length) {
       setHasMoreProducts(false);
