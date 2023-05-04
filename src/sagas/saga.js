@@ -16,8 +16,7 @@ function* fetchOrder(action) {
     console.log(action.payload);
     const response = yield axios.post('https://localhost:7199/api/order', action.payload, {
       headers: {
-        'Authorization': localStorage.getItem('token'),
-        'Content-Type': 'application/json'
+        'Authorization': localStorage.getItem('token')
       }
     }
     );

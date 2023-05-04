@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { getCookie, setCookie } from "../utils/helpers";
+
 const SingleProduct = ({ product }) => {
   const dispatch = useDispatch();
   if (!product) {
@@ -9,16 +11,17 @@ const SingleProduct = ({ product }) => {
     const order = {
       productId: product.Id,
       productName: product.ProductName,
-      count: 1, 
-      price: product.Price
+      count: 1,
+      price: product.Price,
     };
-    const currentOrders = JSON.parse(localStorage.getItem('orders')) || []; // Lấy danh sách đơn hàng hiện tại từ local storage, hoặc trả về một mảng rỗng nếu không có dữ liệu nào trong local storage
+    const currentOrders = JSON.parse(getCookie('orders')) || []; // Lấy danh sách đơn hàng hiện tại từ cookie, hoặc trả về một mảng rỗng nếu không có dữ liệu nào trong cookie
     const updatedOrders = [...currentOrders, order]; // Thêm đơn hàng mới vào danh sách hiện tại
-    localStorage.setItem('orders', JSON.stringify(updatedOrders)); // Lưu danh sách đơn hàng mới vào local storage
+    setCookie('orders', JSON.stringify(updatedOrders), 30); // Lưu danh sách đơn hàng mới vào cookie trong 30 ngày
     dispatch({ type: 'GET_ORDER', payload: updatedOrders }); // Cập nhật state với danh sách đơn hàng mới
     console.log(updatedOrders);
-    localStorage.setItem(product.Id, product.ProductName);
-  }
+    setCookie(product.Id, product.ProductName, 30);
+  };
+  
   return (
     
     <div className="single-product flex flex-col bg-gray-50 gap-3 shadow-md hover:shadow-xl hover:scale-105 duration-300 px-4 py-7 rounded-sm overflow-hidden">

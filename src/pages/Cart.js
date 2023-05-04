@@ -11,12 +11,12 @@ const Cart = () => {
     dispatch({ type: 'GET_ORDER_LIST' });
   }, []);
   // Sort the list of orders by timestamp and get the most recent order
-  const mostRecentOrder = orders?.reduce((a, b) => {
-    return new Date(a?.UpdatedAt) > new Date(b?.UpdatedAt) ? a : b;
+  const mostRecentOrder = orders?.sort((a, b) => {
+    const aDate = new Date(a?.CreatedAt);
+    const bDate = new Date(b?.CreatedAt);
+    return aDate - bDate;
   }, null);
-
-  
-
+  console.log(mostRecentOrder)
   return (
     <div className="flex flex-col items-center justify-center h-full w-12/12 gap-8">
       <h1 className="text-3xl font-bold text-gray-800">
