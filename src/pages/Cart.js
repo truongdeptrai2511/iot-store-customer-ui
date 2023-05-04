@@ -14,14 +14,15 @@ const Cart = () => {
   const mostRecentOrder = orders?.reduce((a, b) => {
     return new Date(a?.UpdatedAt) > new Date(b?.UpdatedAt) ? a : b;
   }, null);
-  console.log(mostRecentOrder)
+
+  
 
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-8">
+    <div className="flex flex-col items-center justify-center h-full w-12/12 gap-8">
       <h1 className="text-3xl font-bold text-gray-800">
         Your Orders
       </h1>
-      <div className="flex flex-wrap justify-center gap-10 max-w-4xl">
+      <div className="flex flex-wrap justify-center gap-10 w-screen">
         {mostRecentOrder && (
           <Order key={mostRecentOrder.Id} order={mostRecentOrder}>
           </Order>

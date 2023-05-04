@@ -1,4 +1,4 @@
-import { put, takeLatest, all } from 'redux-saga/effects';
+import { put, takeLatest, all, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 function* fetchCategory() {
@@ -46,6 +46,21 @@ function* fetchGetOrder() {
   }
 }
 
+function* delOrder(action) {
+  try {
+    const response = yield axios.delete(`https://localhost:7199/api/order/${action.payload}`, {
+      headers: {
+        'Authorization': localStorage.getItem('token')
+      }
+    });
+    console.log(response.data);
+    yield put({ type: 'DELETE_ORDER_SUCCESS', payload: action.payload });
+  } catch (error) {
+    yield put({ type: 'DELETE_ORDER_FAILED', payload: error });
+    console.log(error); // log the error message for troubleshooting
+  }
+}
+
 // -----------------------------------------------------------------------------
 function* categoryWatcher() {
   yield takeLatest('GET_CATEGORY', fetchCategory);
@@ -59,6 +74,10 @@ function* getOrderWatcher() {
   yield takeLatest('GET_ORDER_LIST', fetchGetOrder);
 }
 
+function* delOrderWatcher() {
+  yield takeLatest('DELETE_ORDER', delOrder);
+}
+
 export default function* rootSaga() {
-  yield all([categoryWatcher(), orderWatcher(), getOrderWatcher()]);
+  yield all([categoryWatcher(), orderWatcher(), getOrderWatcher(), delOrderWatcher()]);
 }

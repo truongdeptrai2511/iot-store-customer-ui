@@ -1,10 +1,10 @@
-
 const initialState = {
   category: [],
   error: null,
   order: [],
   getOrder: [],
 };
+
 
 const categoryReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -38,4 +38,17 @@ const getOrderReducer = (state = initialState.getOrder, action) => {
       return state;
   }
 };
-export { categoryReducer, orderReducer, getOrderReducer };
+
+const deleteOrderReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'DELETE_ORDER_SUCCESS':
+      const updatedOrders = state.order.filter(o => o.Id !== action.payload);
+      return { ...state, order: updatedOrders, error: null };
+    case 'DELETE_ORDER_FAILED':
+      return { ...state, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export { categoryReducer, orderReducer, getOrderReducer, deleteOrderReducer };
