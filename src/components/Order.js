@@ -9,49 +9,58 @@ const Order = ({ order }) => {
     dispatch({ type: 'GET_PRODUCTS' });
   }, [dispatch]);
 
-  const handleRemoveClick = (id) => {
-    dispatch({ type: 'DELETE_ORDER', payload: { id } });
+  const handleRemoveClick = (productId) => {
+    dispatch({ type: 'DELETE_ORDER_ITEM', payload: { orderId: order[0].Order.Id, productId } });
   };
-  if (order.length > 0) {
-    const firstOrderId = order[0];
-    console.log("First order ID:", firstOrderId);
-    return (
-      <div className="w-full md:w-2/3 bg-white rounded-md shadow" key={order?.Order?.Id}>
-        <h2 className="text-xl font-bold text-gray-800 px-6 py-4">Order Details:</h2>
-        <ul className="divide-y divide-gray-200">
-          {firstOrderId.ProductOrders && firstOrderId.ProductOrders.map(({ ProductId, Count, Price }) => {
-            const product = products[ProductId];
-            if (!product) {
-              return <li>Loading...</li>;
-            }
-            return (
-              <li key={ProductId} className="px-6 py-4 hover:bg-gray-50">
-                <div className="flex justify-content items-center">
-                  <div className="flex items-center">
-                    <div className="font-semibold text-lg">{product.ProductName}</div>
-                    <div className="text-gray-500 ml-2">({ProductId})</div>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="mr-2">x {Count}</div>
-                    <div className="font-semibold">{formatCurrency(Price)}</div>
-                  </div>
-                </div>
-                <button className="text-red-600 hover:text-red-800 float-right" onClick={() => handleRemoveClick(ProductId)}>
-                  Remove
-                </button>
-              </li>
-            );
-          })}
-          <li className="px-6 py-4 font-semibold text-right">Order Total: {
-            formatCurrency(firstOrderId?.Order?.OrderTotal)}</li>
-        </ul>
-      </div>
-    );
-  } else {
-    console.log("No orders found");
+
+  if (order.length === 0) {
+    return <div>No orders found</div>;
   }
 
+  const firstOrderId = order[0];
+  const productCounts = firstOrderId.ProductOrders.reduce((acc, { ProductId, Count, Price }) => {
+    if (acc[ProductId]) {
+      acc[ProductId] += Count;
+    } else {
+      acc[ProductId] = Count;
+    }
+    return acc;
+  }, {});
+  
+  const orderTotal = firstOrderId.ProductOrders.reduce((acc, { Count, Price }) => acc + Count * Price, 0);
 
+  return (
+    <div className="w-full md:w-2/3 bg-white rounded-md shadow" key={firstOrderId.Order.Id}>
+      <h2 className="text-xl font-bold text-gray-800 px-6 py-4">Order Details:</h2>
+      <ul className="divide-y divide-gray-200">
+        {Object.entries(productCounts).map(([productId, count]) => {
+          const productIndex = products.findIndex((product) => product.Id === parseInt(productId));
+          const product = products[productIndex];
+          if (!product) {
+            return <li key={productId}>Loading...</li>;
+          }
+          return (
+            <li key={productId} className="px-6 py-4 hover:bg-gray-50">
+              <div className="flex justify-content items-center">
+                <div className="flex items-center">
+                  <div className="font-semibold text-lg">{product.ProductName}</div>
+                  <div className="text-gray-500 ml-2">({productId})</div>
+                </div>
+                <div className="flex items-center">
+                  <div className="mr-2">x {count}</div>
+                  <div className="font-semibold">{formatCurrency(product.Price)}</div>
+                </div>
+              </div>
+              <button className="text-red-600 hover:text-red-800 float-right" onClick={() => handleRemoveClick(productId)}>
+                Remove
+              </button>
+            </li>
+          );
+        })}
+        <li className="px-6 py-4 font-semibold text-right">Order Total: {formatCurrency(orderTotal)}</li>
+      </ul>
+    </div>
+  );
 };
 
 export default Order;
