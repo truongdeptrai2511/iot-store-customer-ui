@@ -15,8 +15,7 @@ import Login from "./pages/Login";
 const App = () => {
   return (
     <section className="">
-      <Navbar />
-
+      <Navbar style={{ position: 'fixed', top: 0, width: '100%', zIndex: 9999 }} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />

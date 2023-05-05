@@ -47,13 +47,14 @@ function* fetchGetOrder() {
 
 function* delOrder(action) {
   try {
-    const response = yield axios.delete(`https://localhost:7199/api/order/${action.payload}`, {
+    const response = yield axios.delete(`https://localhost:7199/api/order/${action.payload.Id}/${action.payload.OrderId}`, {
       headers: {
         'Authorization': localStorage.getItem('token')
       }
     });
     console.log(response.data);
     yield put({ type: 'DELETE_ORDER_SUCCESS', payload: action.payload });
+    yield fetchGetOrder();
   } catch (error) {
     yield put({ type: 'DELETE_ORDER_FAILED', payload: error });
     console.log(error); // log the error message for troubleshooting
@@ -74,7 +75,7 @@ function* getOrderWatcher() {
 }
 
 function* delOrderWatcher() {
-  yield takeLatest('DELETE_ORDER', delOrder);
+  yield takeLatest('DELETE_ORDER_ITEM', delOrder);
 }
 
 export default function* rootSaga() {

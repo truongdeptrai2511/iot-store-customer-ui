@@ -42,7 +42,7 @@ const getOrderReducer = (state = initialState.getOrder, action) => {
 const deleteOrderReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'DELETE_ORDER_SUCCESS':
-      const updatedOrders = state.order.filter(o => o.Id !== action.payload);
+      const updatedOrders = state.order.filter(o => o.OrderId !== action.payload.OrderId);
       return { ...state, order: updatedOrders, error: null };
     case 'DELETE_ORDER_FAILED':
       return { ...state, error: action.payload };
