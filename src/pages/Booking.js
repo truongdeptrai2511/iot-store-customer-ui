@@ -6,11 +6,13 @@ const Booking = () => {
   const [sub, setSub] = useState("");
   const [date, setDate] = useState("");
   const [tnx, setTnx] = useState("");
+  const [alertBooking, setAlertBooking] = useState("");
   const [formData, setFormData] = useState(""); //form data are saved here
 
   function handleSubmit(e) {
     e.preventDefault();
     setTnx("Thanks for booking!");
+    setAlertBooking("Comming soon!");
     setFormData(<p>{sub + " " + date}</p>);
   }
   return (
@@ -45,6 +47,7 @@ const Booking = () => {
         </form>
       </div>
       <p className="text-center text-green-500 pb-10">{tnx}</p>
+      <p className="text-center text-green-500 pb-10">{alertBooking}</p>
       <BestSelling />
     </section>
   );
