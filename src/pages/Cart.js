@@ -6,6 +6,7 @@ import Order from "../components/Order";
 const Cart = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.getOrder.getOrder);
+  
   useEffect(() => {
     dispatch({ type: 'GET_ORDER_LIST' });
   }, []);

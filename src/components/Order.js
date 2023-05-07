@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import { formatCurrency } from '../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 const Order = ({ order }) => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
+
   useEffect(() => {
     dispatch({ type: 'GET_PRODUCTS' });
   }, [dispatch]);
@@ -40,16 +42,16 @@ const Order = ({ order }) => {
           }
           return (
             <li key={productId} className="product-item bg-gray-50 rounded-md shadow-md p-4 hover:bg-gray-100 transition duration-300" style={{ display: "flex", flexDirection: "column" }}>
-              <div className="product-image" style={{height: "60%"}}>
+              <div className="product-image" style={{ height: "60%" }}>
                 <img src={product.ImgName} alt={product.ProductName} />
               </div>
-              <div className="product-details" style={{height: "40%"}}>
+              <div className="product-details" style={{ height: "40%" }}>
                 <h3 className="font-bold text-lg mb-2">{product.ProductName}</h3>
                 <p className="text-gray-600 mb-4 text-red-600">{formatCurrency(product.Price)}</p>
                 <span>{count}</span>
               </div>
-              <div className="product-ft" style={{ textAlign: "center", marginTop: "auto", height:"10%" }}>
-                <button className="text-red-600 hover:text-red-800" onClick={() => handleRemoveClick(product.Id , order[0].Order.Id)}>
+              <div className="product-ft" style={{ textAlign: "center", marginTop: "auto", height: "10%" }}>
+                <button className="text-red-600 hover:text-red-800" onClick={() => handleRemoveClick(product.Id, order[0].Order.Id)}>
                   Remove
                 </button>
               </div>

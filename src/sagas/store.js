@@ -5,7 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import productReducer from './productReducer'
 import productSaga from './productSaga.js';
 import rootSaga from './saga.js';
-import { categoryReducer, orderReducer, getOrderReducer, deleteOrderReducer } from './reducer.js';
+import { categoryReducer, orderReducer, getOrderReducer, deleteOrderReducer, updateOrder } from './reducer.js';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -15,7 +15,8 @@ const store = configureStore({
     category: categoryReducer,
     order: orderReducer,
     getOrder: getOrderReducer,
-    delOrder: deleteOrderReducer
+    delOrder: deleteOrderReducer,
+    updateOrder: updateOrder
   },
   middleware: [sagaMiddleware]
 });

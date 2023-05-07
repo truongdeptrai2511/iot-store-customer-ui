@@ -61,6 +61,21 @@ function* delOrder(action) {
   }
 }
 
+function* updateOrder(action) {
+  try {
+    const response = yield axios.put(`https://localhost:7199/api/order/update-order/${action.OrderId}`, {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    });
+    console.log(response.Message);
+    yield put({ type: 'UPDATE_ORDER_SUCCESS', payload: action.payload });
+  } catch (error) {
+    yield put({ type: 'UPDATE_ORDER_FAILED', payload: error });
+    console.log(error); // log the error message for troubleshooting
+  }
+}
+
 // -----------------------------------------------------------------------------
 function* categoryWatcher() {
   yield takeLatest('GET_CATEGORY', fetchCategory);
@@ -78,6 +93,10 @@ function* delOrderWatcher() {
   yield takeLatest('DELETE_ORDER_ITEM', delOrder);
 }
 
+function* updateOrderWatcher() {
+  yield takeLatest('UPDATE_ORDER_ITEM', updateOrder); 
+}
+
 export default function* rootSaga() {
-  yield all([categoryWatcher(), orderWatcher(), getOrderWatcher(), delOrderWatcher()]);
+  yield all([categoryWatcher(), orderWatcher(), getOrderWatcher(), delOrderWatcher(), updateOrderWatcher()]);
 }

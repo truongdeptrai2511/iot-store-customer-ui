@@ -51,4 +51,16 @@ const deleteOrderReducer = (state = initialState, action) => {
   }
 };
 
-export { categoryReducer, orderReducer, getOrderReducer, deleteOrderReducer };
+const updateOrder = (state = initialState.getOrder, action) => {
+  switch (action.type) {
+    case 'UPDATE_ORDER_SUCCESS':
+      const updatedOrders = state.order.filter(o => o.OrderId === action.payload.OrderId);
+      return { ...state, getOrder: updatedOrders, error: null };
+    case 'UPDATE_ORDER_FAILED':
+      return { ...state, error: action.payload };
+    default:
+      return state;
+  }
+}
+
+export { categoryReducer, orderReducer, getOrderReducer, deleteOrderReducer, updateOrder };
