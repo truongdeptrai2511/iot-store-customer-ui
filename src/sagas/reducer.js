@@ -38,18 +38,22 @@ const getOrderReducer = (state = initialState.getOrder, action) => {
       return state;
   }
 };
-
 const deleteOrderReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'DELETE_ORDER_SUCCESS':
-      const updatedOrders = state.order.filter(o => o.OrderId !== action.payload.OrderId);
-      return { ...state, order: updatedOrders, error: null };
+    case 'DELETE_ORDER_ITEM':
+      const updatedOrder = state.order.filter(o => o.Id !== action.payload.Id);
+      console.log(action.payload.OrderId)
+      return { ...state, order: updatedOrder, error: null };
+    case 'GET_ORDER_RECEIVED':
+      return { ...state, getOrder: action.payload, error: null };
     case 'DELETE_ORDER_FAILED':
+    case 'GET_ORDER_FAILED':
       return { ...state, error: action.payload };
     default:
       return state;
   }
 };
+
 
 const updateOrder = (state = initialState.getOrder, action) => {
   switch (action.type) {
