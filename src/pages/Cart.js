@@ -1,29 +1,41 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Order from "../components/Order";
 
-const Cart = () => {
-  const dispatch = useDispatch();
-  const orders = useSelector((state) => state.getOrder.getOrder);
-  useEffect(() => {
-    dispatch({ type: 'GET_ORDER_LIST' });
-  }, []);
-  // Sort the list of orders by timestamp and get the most recent order
-  const mostRecentOrder = orders?.sort((a, b) => {
+const sortOrdersByTimestamp = (orders) => {
+  return orders?.sort((a, b) => {
     const aDate = new Date(a?.CreatedAt);
     const bDate = new Date(b?.CreatedAt);
-    return aDate - bDate;
-  }, null);
+    return bDate - aDate;
+  });
+};
+
+const Cart = () => {
+  const dispatch = useDispatch();
+  const orders = useSelector((state) => state.getOrder.getOrder) || [];
+  const [sortOrder, setSortOrder] = useState(null);
+
+  useEffect(() => {
+    dispatch({ type: "GET_ORDER_LIST" });
+  }, [dispatch]);
+
+  const handleRemoveClick = (Id, OrderId) => {
+    dispatch({ type: "DELETE_ORDER_ITEM", payload: { Id, OrderId } });
+  };
+
+  useEffect(() => {
+    const sortedOrders = sortOrdersByTimestamp(orders);
+    const latestOrder = sortedOrders?.[0];
+    setSortOrder(latestOrder);
+  }, [orders]);
+
   return (
     <div className="flex flex-col items-center justify-center h-full w-12/12 gap-8">
-      <h1 className="text-3xl font-bold text-gray-800">
-        Your Orders
-      </h1>
+      <h1 className="text-3xl font-bold text-gray-800">Your Orders</h1>
       <div className="flex flex-wrap justify-center gap-10 w-screen">
-        {mostRecentOrder && (
-          <Order key={mostRecentOrder.Id} order={mostRecentOrder}>
-          </Order>
+        {sortOrder && (
+          <Order key={sortOrder?.Id} order={sortOrder} onRemove={handleRemoveClick} />
         )}
       </div>
       <Link

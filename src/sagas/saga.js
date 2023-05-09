@@ -13,7 +13,6 @@ function* fetchCategory() {
 
 function* fetchOrder(action) {
   try {
-    console.log(action.payload);
     const response = yield axios.post('https://localhost:7199/api/order', action.payload, {
       headers: {
         'Authorization': localStorage.getItem('token')
@@ -22,7 +21,6 @@ function* fetchOrder(action) {
     );
     console.log(response.data);
     yield put({ type: 'ORDER_RECEIVED', payload: response.data.Result });
-    alert(response.data.Message);
   } catch (error) {
     yield put({ type: 'ORDER_FAILED', payload: error });
     console.log(error); // log the error message for troubleshooting
