@@ -36,7 +36,6 @@ function* fetchGetOrder() {
     });
     console.log(response.data);
     yield put({ type: 'GET_ORDER_RECEIVED', payload: response.data.Result });
-    alert(response.data.Message);
   } catch (error) {
     yield put({ type: 'GET_ORDER_FAILED', payload: error });
     console.log(error); // log the error message for troubleshooting

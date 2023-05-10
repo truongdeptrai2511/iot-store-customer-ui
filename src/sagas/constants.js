@@ -1,0 +1,21 @@
+export const CATEGORY_RECEIVED = 'CATEGORY_RECEIVED';
+export const CATEGORY_FAILED = 'CATEGORY_FAILED';
+export const ORDER_RECEIVED = 'ORDER_RECEIVED';
+export const ORDER_FAILED = 'ORDER_FAILED';
+export const GET_ORDER_RECEIVED = 'GET_ORDER_RECEIVED';
+export const GET_ORDER_FAILED = 'GET_ORDER_FAILED';
+export const DELETE_ORDER_SUCCESS = 'DELETE_ORDER_SUCCESS';
+export const DELETE_ORDER_FAILED = 'DELETE_ORDER_FAILED';
+export const UPDATE_ORDER_SUCCESS = 'UPDATE_ORDER_SUCCESS';
+export const UPDATE_ORDER_FAILED = 'UPDATE_ORDER_FAILED';
+export const GET_CATEGORY = 'GET_CATEGORY';
+export const GET_ORDER = 'GET_ORDER';
+export const GET_ORDER_LIST = 'GET_ORDER_LIST';
+export const DELETE_ORDER_ITEM = 'DELETE_ORDER_ITEM';
+export const UPDATE_ORDER_ITEM = 'UPDATE_ORDER_ITEM';
+
+export const getCategory = () => ({ type: GET_CATEGORY });
+export const getOrder = (payload) => ({ type: GET_ORDER, payload });
+export const getOrderList = () => ({ type: GET_ORDER_LIST });
+export const deleteOrderItem = (payload) => ({ type: DELETE_ORDER_ITEM, payload });
+export const updateOrderItem = (payload) => ({ type: UPDATE_ORDER_ITEM, payload });
