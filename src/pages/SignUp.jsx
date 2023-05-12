@@ -44,7 +44,7 @@ function Signup() {
             <div className="m-auto w-full md:w-3/4 lg:w-2/3 xl:w-2/4 bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="flex justify-between items-center mb-8 px-6 py-4 bg-gray-200">
                     <h1 className="text-3xl font-bold text-gray-700">Welcome Back</h1>
-                    <Link to="/login" className="text-blue-500 hover:text-gray-700 focus:outline-none">
+                    <Link to="/login" className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out text-blue-500 hover:text-gray-700 focus:outline-none">
                         Sign in
                     </Link>
                 </div>
@@ -60,7 +60,7 @@ function Signup() {
                                 onChange={handleChange}
                                 value={data.userName}
                                 required
-                                className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             />
                         </div>
                         <div className="w-full md:w-1/2 px-2">
@@ -72,7 +72,7 @@ function Signup() {
                                 onChange={handleChange}
                                 value={data.name}
                                 required
-                                className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             />
                         </div>
                     </div>
@@ -86,7 +86,7 @@ function Signup() {
                                 onChange={handleChange}
                                 value={data.email}
                                 required
-                                className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 autoComplete='off'
                             />
                         </div>
@@ -100,7 +100,7 @@ function Signup() {
                                 value={data.password}
                                 required
                                 autoComplete='off'
-                                className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             />
                         </div>
                     </div>
@@ -113,7 +113,7 @@ function Signup() {
                             onChange={handleChange}
                             value={data.phoneNumber}
                             required
-                            className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
                     </div>
                     <div className="mb-4">
@@ -125,7 +125,7 @@ function Signup() {
                             onChange={handleChange}
                             value={data.avatar}
                             required
-                            className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
                     </div>
                     <div className="mb-6">
@@ -135,14 +135,14 @@ function Signup() {
                             name="address"
                             onChange={handleChange}
                             value={data.address}
-                            className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            className="focus:border-blue-400 transition delay-150 duration-300 ease-in-out appearance-none block w-full text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
                     </div>
                     {error && <p className="text-red-500 mb-4">{error}</p>}
                     <div className="flex items-center justify-between">
                         <button
                             type="submit"
-                            class="bg-gradient-to-r from-blue-500 to-blue-700 hover:shadow-lg text-gray-500 font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline hover:background-gray-300"
+                            class="transition delay-150 duration-300 ease-in-out bg-gradient-to-r from-grey-500 to-grey-700 text-gray-500 font-bold py-3 px-4 rounded hover:bg-sky-500 hover:ring-sky-500 hover:text-white"
                         >
                             Sign up
                         </button>
