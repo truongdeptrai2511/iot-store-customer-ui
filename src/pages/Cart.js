@@ -11,31 +11,46 @@ const sortOrdersByTimestamp = (orders) => {
   });
 };
 
+const getLatestOrder = (orders) => {
+  const sortedOrders = sortOrdersByTimestamp(orders);
+  const latestOrder = sortedOrders?.[0];
+  return latestOrder;
+};
+
+
 const Cart = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.getOrder.getOrder) || [];
-  const [sortOrder, setSortOrder] = useState(null);
-
+  const [latestOrder, setLatestOrder] = useState(null);
+  
   useEffect(() => {
     dispatch({ type: "GET_ORDER_LIST" });
   }, [dispatch]);
 
-  const handleRemoveClick = (Id, OrderId) => {
-    dispatch({ type: "DELETE_ORDER_ITEM", payload: { Id, OrderId } });
-  };
-
   useEffect(() => {
-    const sortedOrders = sortOrdersByTimestamp(orders);
-    const latestOrder = sortedOrders?.[0];
-    setSortOrder(latestOrder);
+    setLatestOrder(getLatestOrder(orders));
   }, [orders]);
+
+  const handleRemoveOrder = (Id, OrderId) => {
+    dispatch({ type: "DELETE_ORDER_ITEM", payload: { Id, OrderId } });
+    // Xóa sản phẩm khỏi giỏ hàng
+    // Cập nhật lại latestOrder
+    const updatedOrder = latestOrder.ProductOrders.filter(
+      (product) => product.ProductId !== Id
+    );
+    setLatestOrder((prevOrder) => ({
+      ...prevOrder,
+      ProductOrders: updatedOrder,
+    }));
+  };
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-12/12 gap-8">
       <h1 className="text-3xl font-bold text-gray-800">Your Orders</h1>
       <div className="flex flex-wrap justify-center gap-10 w-screen">
-        {sortOrder && (
-          <Order key={sortOrder?.Id} order={sortOrder} onRemove={handleRemoveClick} />
+      {latestOrder && (
+          <Order key={latestOrder?.Id} order={latestOrder} onRemove={handleRemoveOrder} />
         )}
       </div>
       <Link

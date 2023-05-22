@@ -51,7 +51,7 @@ function* delOrder(action) {
     });
     console.log(response.data);
     yield put({ type: 'DELETE_ORDER_SUCCESS', payload: action.payload });
-    yield fetchGetOrder();
+    yield call(fetchGetOrder);
   } catch (error) {
     yield put({ type: 'DELETE_ORDER_FAILED', payload: error });
     console.log(error); // log the error message for troubleshooting
