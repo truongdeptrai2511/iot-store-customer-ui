@@ -30,7 +30,6 @@ const Cart = () => {
   useEffect(() => {
     dispatch({ type: "GET_ORDER_LIST" });
   }, [dispatch]);
-
   useEffect(() => {
     const sortedOrders = sortOrdersByTimestamp(orders);
     console.log(sortedOrders)
@@ -49,7 +48,12 @@ const Cart = () => {
       return { ...prevOrder, ProductOrders: updatedProductOrders };
     });
   };
-  
+
+  useEffect(() => {
+    const sortedOrders = sortOrdersByTimestamp(orders);
+    const latestOrder = sortedOrders?.[0];
+    setSortOrder(latestOrder);
+  }, [orders]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full gap-8">

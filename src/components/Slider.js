@@ -56,7 +56,8 @@ const Slider = () => {
     setCurrentSlide(
       currentSlide === data.length - 1 ? 0 : (prevSlide) => prevSlide + 1
     );
-    }
+  };
+
   return (
     <div className="frame relative overflow-x-hidden">
       <div
