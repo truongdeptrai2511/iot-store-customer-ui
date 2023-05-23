@@ -38,6 +38,7 @@ function* fetchGetOrder() {
         'Authorization': localStorage.getItem('token')
       }
     });
+    console.log('dachay')
     console.log(response.data);
     yield put({ type: 'GET_ORDER_RECEIVED', payload: response.data.Result });
   } catch (error) {
@@ -48,7 +49,7 @@ function* fetchGetOrder() {
 
 function* delOrder(action) {
   try {
-    const response = yield axios.delete(`https://localhost:7199/api/order/${action.payload.Id}/${action.payload.OrderId}`, {
+    const response = yield axios.delete(`https://localhost:7199/api/order/delete-order/${action.payload.Id}/${action.payload.OrderId}`, {
       headers: {
         'Authorization': localStorage.getItem('token')
       }

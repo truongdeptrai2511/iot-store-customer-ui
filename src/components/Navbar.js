@@ -1,17 +1,18 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { useEffect, useState } from "react";
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("token")) {
       setIsLogin(true);
     }
-  }, [isLogin])
+  }, [window.location.href])
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLogin(false);
-    window.location.reload();
+    navigate('/home');
   };
   return (
     <div className="shadow-lg backdrop-blur-lg py-5 text-gray-900 bg-gray-50">

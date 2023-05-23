@@ -27,7 +27,6 @@ function Login(){
 				alert(error.response.data.message);
 			}
 		}
-		window.location.reload();
 	};
     return(
         <div className="login_container">
