@@ -11,6 +11,7 @@ const Order = ({ order, onRemove }) => {
   const [orderTotal, setOrderTotal] = useState(0);
   const [currentOrderTotal, setCurrentOrderTotal] = useState(0);
 
+  console.log(order)
   useEffect(() => {
     dispatch({ type: 'GET_PRODUCTS' });
     setOrderTotal(order.ProductOrders.reduce((acc, { Count, Price }) => acc + Count * Price, 0));

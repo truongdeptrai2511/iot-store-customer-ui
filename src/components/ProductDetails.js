@@ -1,55 +1,80 @@
 import { Link, useLocation } from "react-router-dom";
 import _ from 'lodash';
-
+import { getCookie, setCookie } from "../utils/helpers";
+import { useDispatch } from "react-redux";
+import { FiShoppingCart } from "react-icons/fi";
 const ProductDetails = () => {
   const { state: product } = useLocation();
-
+  const dispatch = useDispatch();
   console.log(product);
+  if (!product) {
+    return null;
+  }
+
+  const truncatedProductName = _.truncate(product.ProductName, { length: 30 });
+  const truncatedDescription = product.Description.split('\n').map((line) =>
+    _.truncate(line.trim(), { length: 100 })
+  );
+
+  const handleAddToCart = () => {
+    console.log("Added");
+    const order = {
+      productId: product.Id,
+      productName: product.ProductName,
+      count: 1,
+      price: product.Price,
+    };
+    console.log(order)
+    const currentOrders = JSON.parse(getCookie('orders')) || []; // Lấy danh sách đơn hàng hiện tại từ cookie, hoặc trả về một mảng rỗng nếu không có dữ liệu nào trong cookie
+    const updatedOrders = [...currentOrders, order]; // Thêm đơn hàng mới vào danh sách hiện tại
+    setCookie('orders', JSON.stringify(updatedOrders), 30); // Lưu danh sách đơn hàng mới vào cookie trong 30 ngày
+    dispatch({ type: 'GET_ORDER', payload: updatedOrders }); // Cập nhật state với danh sách đơn hàng mới
+    setCookie(product.Id, product.ProductName, 30);
+  };
+
   return (
-    <section className="flex flex-col gap-16 py-10 bg-gray-100">
-      {product && (
-        <div className="container mx-auto flex justify-around items-center w-[80%]">
-          <div className="w-96 flex justify-end">
-            <img src={product?.ImgName} alt={product?.ProductName} className="w-full select-none" />
-          </div>
-          <div className="flex flex-col gap-3">
-            <p className="text-gray-500">
-              {"Home/"}
-              {<Link to="/product">product</Link>}
-              {`/${product?.ProductName}`}
-            </p>
-            <h2 className="text-4xl">{_.truncate(product?.ProductName, { length: 30 })}</h2>
-            <span className="font-semibold">
-              Price: <span className="text-2xl">{product?.Price} $</span>
-            </span>
-            <div className="flex flex-col gap-2">
-              <h1 className="text-2xl">Key features</h1>
-              {product?.Description.split('\n').map((line, index) => (
-                <p key={index} className="text-gray-800">{_.truncate(line.trim(), { length: 100 })}</p>
-              ))}
-            </div>
-            <h3 className="flex justify-content text-gray-700 text-lg">
-              <span>Category: {product?.Category}</span>
-            </h3>
-            <button
-              onClick={() => console.log("Added")}
-              className="bg-sky-500 text-sky-50 px-2 py-1 mt-4 rounded-md transition duration-300 hover:bg-sky-600 hover:text-sky-50e"
-              style={{ cursor: "pointer", width: "50%", padding: "10px" }}
-            >
-              Add to cart
-            </button>
-          </div>
+    <section className="container mx-auto py-10">
+      <div className="grid grid-cols-2 gap-10">
+        <div className="flex items-center">
+          <img src={product.ImgName} alt={product.ProductName} className="w-full max-w-sm" />
         </div>
-      )}
+        <div className="flex flex-col justify-center">
+          <nav className="text-sm text-gray-500">
+            <Link to="/" className="text-gray-500 hover:text-gray-700 transition duration-300">
+              Home
+            </Link>
+            <span className="mx-2">&#8594;</span>
+            <Link to="/product" className="text-gray-500 hover:text-gray-700 transition duration-300">
+              Products
+            </Link>
+            <span className="mx-2">&#8594;</span>
+            <span>{product.ProductName}</span>
+          </nav>
+          <h2 className="text-3xl font-bold mt-4">{truncatedProductName}</h2>
+          <p className="text-gray-600 mt-2">${product.Price}</p>
+          <div className="mt-6">
+            <h1 className="text-xl font-semibold">Key features</h1>
+            {truncatedDescription.map((line, index) => (
+              <p key={index} className="text-gray-800 mt-2">{line}</p>
+            ))}
+          </div>
+          <button
+            onClick={handleAddToCart}
+            className="bg-gray-500 hover:bg-red-400 text-white py-2 px-4 mt-8 rounded-md transition duration-300 flex items-center justify-center"
+          >
+            <FiShoppingCart className="mr-2" />
+            Add to cart
+          </button>
+        </div>
+      </div>
       <Link
         to="/product"
-        className="text-xl py-1 text-center hover:text-cyan-500 duration-300 select-none"
+        className="block text-center text-gray-500 hover:text-red-700 mt-8 duration-300"
       >
-        &larr; Go to Product
+        &larr; Go back to products
       </Link>
     </section>
   );
 };
-
 
 export default ProductDetails;

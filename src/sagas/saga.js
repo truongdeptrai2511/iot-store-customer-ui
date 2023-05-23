@@ -3,7 +3,11 @@ import axios from 'axios';
 
 function* fetchCategory() {
   try {
-    const response = yield axios.get('https://localhost:7199/api/Category');
+    const response = yield axios.get('https://localhost:7199/api/Category', {
+      headers: {
+        'Authorization': localStorage.getItem('token'),
+      }
+    });
     yield put({ type: 'CATEGORY_RECEIVED', payload: response.data.Result });
     console.log(response.data);
   } catch (error) {

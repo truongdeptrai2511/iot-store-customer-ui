@@ -4,7 +4,11 @@ import axios from 'axios';
 
 function* fetchProducts() {
   try {
-    const response = yield axios.get('https://localhost:7199/api/Product');
+    const response = yield axios.get('https://localhost:7199/api/Product', {
+      headers: {
+        'Authorization': localStorage.getItem('token'),
+      }
+    });
     yield put({ type: 'PRODUCTS_RECEIVED', payload: response.data.Result });
     console.log(response.data);
   } catch (error) {
